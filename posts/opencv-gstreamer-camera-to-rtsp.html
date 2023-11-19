@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>blogger</title>
+    <title>BlackBoxRecorder</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link
       rel="stylesheet"
@@ -15,6 +15,7 @@
     />
 
     <link rel="stylesheet" href="//unpkg.com/heti/umd/heti.min.css" />
+    <link rel="icon" href="/images/favicon.ico" type="image/x-icon" />
 
     
     <script>
@@ -54,7 +55,7 @@
     <div class="h-full flex justify-center">
       <div class="w-3/5 h-full flex flex-col">
         <div class="flex pt-10">
-          <h1 class="text-5xl font-bold">TimeTick</h1>
+          <h1 class="text-5xl font-bold">B.B.R Blog</h1>
           <p class="text-xl pt-5 pl-5"></p>
         </div>
 
@@ -82,25 +83,25 @@
 <li > 代码示例 </li>
 </ol>
 <p > 从 Gstreamer 官网下载安装包，先安装 runtime installer，再安装 development installer。</p>
-<p><img src="https://yn-public.oss-cn-beijing.aliyuncs.com/image-20230909163632285.png" alt="image-20230909163632285"></p>
+<p><img src="/images/image-20230909163632285.png" alt="image-20230909163632285"></p>
 <p > 安装完成后添加环境变量 </p>
-<p><img src="https://yn-public.oss-cn-beijing.aliyuncs.com/image-20230909163712456.png" alt="image-20230909163712456"></p>
+<p><img src="/images/image-20230909163712456.png" alt="image-20230909163712456"></p>
 <p > 克隆 opencv 源码，使用 git 克隆源码，这样再构建中下载是从 gitcode 下载；如果下载了 zip，会从 GitHub 下载速度很慢。</p>
-<p><img src="https://yn-public.oss-cn-beijing.aliyuncs.com/image-20230909163740673.png" alt="image-20230909163740673"></p>
+<p><img src="/images/image-20230909163740673.png" alt="image-20230909163740673"></p>
 <p > 使用 Git Bash GUI 克隆 </p>
-<p><img src="https://yn-public.oss-cn-beijing.aliyuncs.com/image-20230909163810322.png" alt="image-20230909163810322"></p>
+<p><img src="/images/image-20230909163810322.png" alt="image-20230909163810322"></p>
 <p > 然后切换到 4.8.0 的 tag</p>
-<p><img src="https://yn-public.oss-cn-beijing.aliyuncs.com/image-20230909163836637.png" alt="image-20230909163836637"></p>
+<p><img src="/images/image-20230909163836637.png" alt="image-20230909163836637"></p>
 <p > 打开 cmake gui，填写源码目录和安装目录；</p>
-<p><img src="https://yn-public.oss-cn-beijing.aliyuncs.com/image-20230909164005704.png" alt="image-20230909164005704"></p>
+<p><img src="/images/image-20230909164005704.png" alt="image-20230909164005704"></p>
 <p > 然后点击 configure，可以看到 configure 过程中 gitcode 下载 </p>
-<p><img src="https://yn-public.oss-cn-beijing.aliyuncs.com/image-20230909164042422.png" alt="image-20230909164042422"></p>
+<p><img src="/images/image-20230909164042422.png" alt="image-20230909164042422"></p>
 <p>configure 完成之后搜索 gstreamer，相关的 GStreamer 库路径已经自动识别，默认勾选了 WITH_GSTREAMER</p>
-<p><img src="https://yn-public.oss-cn-beijing.aliyuncs.com/image-20230909190948591.png" alt="image-20230909190948591"></p>
+<p><img src="/images/image-20230909190948591.png" alt="image-20230909190948591"></p>
 <p > 然后再次点击 Configure，查看构建信息，GStreamer 选项已打开 </p>
-<p><img src="https://yn-public.oss-cn-beijing.aliyuncs.com/image-20230909191152282.png" alt="image-20230909191152282"></p>
+<p><img src="/images/image-20230909191152282.png" alt="image-20230909191152282"></p>
 <p > 点击 Generate，完成后 Open Project，使用 VS2022 打开项目 </p>
-<p><img src="https://yn-public.oss-cn-beijing.aliyuncs.com/image-20230909164232808.png" alt="image-20230909164232808"></p>
+<p><img src="/images/image-20230909164232808.png" alt="image-20230909164232808"></p>
 <p > 生成 ALL_BUILD，再生成 INSTALL。opencv 就安装在了指定的 build 路径下的 install 目录里。目录中包含 include 和 x64\vs17\bin、x64\vs17\lib 就是我们需要的。</p>
 <p > 使用 VS2022 创建一个 CMake 项目，推流的关键代码如下：</p>
 <pre><code class="hljs language-cpp"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">cvstream::read_rtsp</span><span class="hljs-params">()</span>
@@ -192,7 +193,7 @@
 
         <div class="pt-10 h-30">
           <hr />
-          <div class="pt-2 pb-3 h-18">TimeTick @ 2023</div>
+          <div class="pt-2 pb-3 h-18">BlackBoxRecorder @ 2023</div>
         </div>
       </div>
     </div>
