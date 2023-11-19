@@ -78,25 +78,25 @@
   <div class=""><p > 使用 OpenCV 将笔记本摄像头推流成 RTSP</p>
 <ol>
 <li > 下载 Gstreamer</li>
-<li > 克隆 opencv 源码 </li>
-<li > 使用 cmake 构建 </li>
+<li > 克隆 OpenCV 源码 </li>
+<li > 使用 CMake 构建 </li>
 <li > 代码示例 </li>
 </ol>
 <p > 从 Gstreamer 官网下载安装包，先安装 runtime installer，再安装 development installer。</p>
 <p><img src="/images/image-20230909163632285.png" alt="image-20230909163632285"></p>
 <p > 安装完成后添加环境变量 </p>
 <p><img src="/images/image-20230909163712456.png" alt="image-20230909163712456"></p>
-<p > 克隆 opencv 源码，使用 git 克隆源码，这样再构建中下载是从 gitcode 下载；如果下载了 zip，会从 GitHub 下载速度很慢。</p>
+<p > 克隆 opencv 源码，使用 Git 克隆源码，这样再构建中下载是从 Gitcode 下载；如果下载了 zip，会从 GitHub 下载速度很慢。</p>
 <p><img src="/images/image-20230909163740673.png" alt="image-20230909163740673"></p>
 <p > 使用 Git Bash GUI 克隆 </p>
 <p><img src="/images/image-20230909163810322.png" alt="image-20230909163810322"></p>
 <p > 然后切换到 4.8.0 的 tag</p>
 <p><img src="/images/image-20230909163836637.png" alt="image-20230909163836637"></p>
-<p > 打开 cmake gui，填写源码目录和安装目录；</p>
+<p > 打开 CMake GUI，填写源码目录和安装目录；</p>
 <p><img src="/images/image-20230909164005704.png" alt="image-20230909164005704"></p>
-<p > 然后点击 configure，可以看到 configure 过程中 gitcode 下载 </p>
+<p > 然后点击 Configure，可以看到 Configure 过程中 gitcode 下载 </p>
 <p><img src="/images/image-20230909164042422.png" alt="image-20230909164042422"></p>
-<p>configure 完成之后搜索 gstreamer，相关的 GStreamer 库路径已经自动识别，默认勾选了 WITH_GSTREAMER</p>
+<p>Configure 完成之后搜索 gstreamer，相关的 GStreamer 库路径已经自动识别，默认勾选了 WITH_GSTREAMER</p>
 <p><img src="/images/image-20230909190948591.png" alt="image-20230909190948591"></p>
 <p > 然后再次点击 Configure，查看构建信息，GStreamer 选项已打开 </p>
 <p><img src="/images/image-20230909191152282.png" alt="image-20230909191152282"></p>
@@ -181,7 +181,7 @@
         std::this_thread::<span class="hljs-built_in">sleep_for</span>(std::chrono::<span class="hljs-built_in">milliseconds</span>(<span class="hljs-number">10</span>));
     }
 }
-</code></pre><p > 代码中的 < code>rtsp://127.0.0.1:8554</code > 是 RTSP 服务器的地址，这里使用 < a href="https://github.com/bluenviron/mediamtx">mediamtx</a > 作为 RTSP 服务器。</p>
+</code></pre><p > 代码中的 <code>rtsp://127.0.0.1:8554</code> 是 RTSP 服务器的地址，这里使用 <a href="https://github.com/bluenviron/mediamtx">mediamtx</a> 作为 RTSP 服务器。</p>
 <p > 完整代码下载：<a href="https://timetick.lanzout.com/izyVM17ug4wb">opencv_video_stream</a></p>
 </div>
 </article>
