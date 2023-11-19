@@ -73,7 +73,7 @@
   </div>
   <hr />
   <div class=""><blockquote>
-<p > 网络摄像头提供的 RTSP 视频流，无法直接在网页上播放，<a href="https://github.com/BlackBoxRecorder/opencv_video_stream">opencv_video_stream</a > 用于将 RTSP 流转换成 MJPEG 流在网页上播放。</p>
+<p > 网络摄像头提供的 RTSP 视频流，无法直接在网页上播放，<a href="https://github.com/BlackBoxRecorder/opencv_video_stream">opencv_video_stream</a> 用于将 RTSP 流转换成 MJPEG 流在网页上播放。</p>
 </blockquote>
 <h3 > 优点：</h3>
 <ol>
@@ -86,7 +86,7 @@
 </ol>
 <h3 > 编译：</h3>
 <ol>
-<li > 安装 opencv 并设置 OpenCV_DIR 环境变量 </li>
+<li > 安装 OpenCV 并设置 OpenCV_DIR 环境变量 </li>
 <li>CMake 编译 </li>
 </ol>
 <h3 > 使用：</h3>
@@ -104,7 +104,7 @@
       <span class="hljs-literal">-q</span>[<span class="hljs-built_in">int</span><span class="hljs-type">eger</span>], <span class="hljs-literal">--quality</span>=[<span class="hljs-built_in">int</span><span class="hljs-type">eger</span>]  The jpeg image quality, <span class="hljs-number">0</span><span class="hljs-literal">-100</span>.
 </code></pre><p > 在终端运行：</p>
 <pre><code class="hljs language-powershell">.\opencv_video_stream.exe <span class="hljs-literal">-s</span> rtsp://<span class="hljs-number">192.168</span>.<span class="hljs-number">2.3</span>:<span class="hljs-number">8554</span>/live <span class="hljs-literal">-d</span> tt <span class="hljs-literal">-q</span> <span class="hljs-number">50</span> <span class="hljs-literal">--width</span> <span class="hljs-number">320</span> <span class="hljs-literal">--height</span> <span class="hljs-number">240</span>
-</code></pre><p > 网页视频打开：<a href="http://127.0.0.1:8897/test">http://127.0.0.1:8897/test</a></p>
+</code></pre><p > 网页视频打开： <code>http://127.0.0.1:8897/test</code></p>
 <p > 或者新建一个网页如下：</p>
 <pre><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span>
 <span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
@@ -114,12 +114,12 @@
 </code></pre><p><strong > 注：</strong></p>
 <p > 如果没有可用的 RTSP 测试地址，可以使用 ffmpeg 将本地视频文件推流到 RTSP 服务器。具体步骤：</p>
 <ol>
-<li > 下载 RTSP 服务器 *<a href="https://github.com/bluenviron/mediamtx">MediaMTX</a>* 并运行，默认监听 8554 端口 </li>
+<li > 下载 RTSP 服务器 <a href="https://github.com/bluenviron/mediamtx">MediaMTX</a> 并运行，默认监听 8554 端口 </li>
 <li > 使用 ffmpeg 将视频文件推流到 MediaMTX</li>
 </ol>
 <pre><code class="hljs language-powershell">ffmpeg.exe <span class="hljs-literal">-re</span> <span class="hljs-literal">-i</span> big_buck_bunny_720p_30mb.mp4 <span class="hljs-literal">-c</span> <span class="hljs-built_in">copy</span> <span class="hljs-literal">-rtsp_transport</span> tcp <span class="hljs-operator">-f</span> rtsp rtsp://<span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span>:<span class="hljs-number">8554</span>/stream
 </code></pre><ol start="3">
-<li>RTSP 流 < code>rtsp://127.0.0.1:8554/stream</code > 可以通过 VLC 播放器播放，验证推流成功 </li>
+<li>RTSP 流 <code>rtsp://127.0.0.1:8554/stream</code> 可以通过 VLC 播放器播放，验证推流成功 </li>
 </ol>
 <h3 > 其他方案：</h3>
 <ol>

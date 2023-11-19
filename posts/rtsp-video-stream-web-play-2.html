@@ -73,19 +73,19 @@
   </div>
   <hr />
   <div class=""><blockquote>
-<p><a href="https://github.com/mpromonet/webrtc-streamer">webrtc-streamer</a > 将 RTSP 流转换成 webrtc 在网页上播放，你需要运行 webrtc-streamer.exe 来处理 RTSP 到 webrtc 的转换，然后在网页端，使用 webrtc-streamer 提供的 JavaScript 库来播放转换后的 webrtc 视频。</p>
+<p><a href="https://github.com/mpromonet/webrtc-streamer">webrtc-streamer</a> 将 RTSP 流转换成 webrtc 在网页上播放，你需要运行 webrtc-streamer.exe 来处理 RTSP 到 webrtc 的转换，然后在网页端，使用 webrtc-streamer 提供的 JavaScript 库来播放转换后的 webrtc 视频。</p>
 </blockquote>
 <p><strong > 优点：</strong></p>
 <p > 实时性很好 </p>
 <p><strong > 缺点：</strong></p>
 <p > 资源占用高 </p>
-<p > 未知原因导致无法正常串流，可尝试使用 < code>./webrtc-streamer.exe -o</code > 解决 </p>
+<p > 未知原因导致无法正常串流，可尝试使用 <code>./webrtc-streamer.exe -o</code> 解决 </p>
 <p > 串流不正常时，网页端偶发会出现卡死 </p>
 <hr>
-<p > 下载并运行 < a href="https://github.com/mpromonet/webrtc-streamer">webrtc-streamer</a>，默认指定端口号是 8000</p>
+<p > 下载并运行 <a href="https://github.com/mpromonet/webrtc-streamer">webrtc-streamer</a>，默认指定端口号是 8000</p>
 <pre><code class="hljs language-powershell">./webrtc<span class="hljs-literal">-streamer</span>.exe
 </code></pre><p><img src="/images/blog-images202307052138654.png" alt="Snipaste_2023-07-05_21-14-32"></p>
-<p > 在网页端引入 < code>webrtcstreamer.js</code>，连接 webrtc-streamer 服务的 8000 端口，代码如下：</p>
+<p > 在网页端引入 <code>webrtcstreamer.js</code>，连接 webrtc-streamer 服务的 8000 端口，代码如下：</p>
 <pre><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;libs/adapter.min.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>

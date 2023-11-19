@@ -75,7 +75,7 @@
   <div class=""><blockquote>
 <p > 摄像头提供 RTSP 视频流，使用 ffmpeg 将 RTSP 视频流转成 FLV 流并推送到服务器 <a href="https://github.com/illuspas/Node-Media-Server">node-media-server</a>，网页上可以使用 <a href="https://github.com/xqq/mpegts.js">flv.js</a> 播放 FLV 视频。</p>
 </blockquote>
-<h2 > 一。创建 NodeMediaServer</h2>
+<h2 > 一、创建 NodeMediaServer</h2>
 <p > 创建 Nodejs 项目 </p>
 <pre><code class="hljs language-bash">npm init -y
 npm i node-media-server --save
@@ -98,12 +98,12 @@ npm i node-media-server --save
 
 <span class="hljs-keyword">const</span> nms = <span class="hljs-keyword">new</span> <span class="hljs-title class_">NodeMediaServer</span>(config);
 nms.<span class="hljs-title function_">run</span>();
-</code></pre><h2 > 二. FFMpeg 推流 </h2>
+</code></pre><h2 > 二、FFMpeg 推流 </h2>
 <p > 使用 ffmpeg 推流：</p>
 <pre><code class="hljs language-powershell">ffmpeg.exe <span class="hljs-literal">-re</span> <span class="hljs-literal">-i</span> <span class="hljs-string">&quot;rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mp4&quot;</span> <span class="hljs-literal">-c</span> <span class="hljs-built_in">copy</span> <span class="hljs-operator">-f</span> flv <span class="hljs-string">&quot;rtmp://localhost/live/test&quot;</span>
 </code></pre><p > 推流成功后，<a href="https://github.com/illuspas/Node-Media-Server">NodeMediaServer</a > 会打印推流成功的日志。打开 NodeMediaServer <a href="http://localhost:8000/admin"> 管理界面 </a> 查看 Streams.</p>
-<h2 > 三。网页播放 </h2>
-<p > 新建一个网页 < code>index.html</code > 内容如下：</p>
+<h2 > 三、网页播放 </h2>
+<p > 新建一个网页 <code>index.html</code> 内容如下：</p>
 <pre><code class="hljs language-html"><span class="hljs-meta">&lt;!doctype <span class="hljs-keyword">html</span>&gt;</span>
 <span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&quot;en&quot;</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
