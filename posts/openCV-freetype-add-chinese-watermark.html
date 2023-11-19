@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>blogger</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/styles/github.min.css"
+    />
+
+    <link rel="stylesheet" href="//unpkg.com/heti/umd/heti.min.css" />
+
+    
+    <script>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement ("script");
+        hm.src = "https://hm.baidu.com/hm.js?9a385ee848ad73f7a5be7a9925adc070";
+        var s = document.getElementsByTagName ("script")[0];
+        s.parentNode.insertBefore (hm, s);
+      })();
+    </script>
+
+    <style type="text/css">
+      html,
+      body {
+        height: 100%;
+
+        /* font-family: "LXGW WenKai Screen", sans-serif; */
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      img {
+        box-shadow: 5px 5px 5px 0px rgba (223, 219, 219, 0.75);
+        /* 水平偏移 垂直偏移 模糊半径 颜色 */
+        border-radius: 10px;
+        /* 设置圆角半径 */
+        border: 1px dashed black;
+        /* 边框宽度 边框样式 边框颜色 */
+      }
+    </style>
+  </head>
+
+  <body class="bg-orange-100 h-full">
+    <div class="h-full flex justify-center">
+      <div class="w-3/5 h-full flex flex-col">
+        <div class="flex pt-10">
+          <h1 class="text-5xl font-bold">TimeTick</h1>
+          <p class="text-xl pt-5 pl-5"></p>
+        </div>
+
+        <div class="w-1/6 flex justify-between relative top-10 text-blue-600">
+          <a href="/index.html"> 首页 </a>
+          <a href="/archive.html"> 归档 </a>
+          <a href="/about.html"> 关于 </a>
+        </div>
+
+        
+
+<article class="markdown-body pt-20 grow">
+  <h2 class="text-3xl font-bold">OpenCV 用 freetype 给图片添加中文水印 </h2>
+
+  <div class="flex space-x-4">
+    <span > 创建日期： 2023-09-15 </span>
+    <span > 标签： <a href="/tags/OpenCV.html">OpenCV</a> </span>
+  </div>
+  <hr />
+  <div class=""><blockquote>
+<p>Opencv 的 putText 函数只能添加英文，如果添加中文，会显示乱码，这里介绍一种使用 freetype 添加中文水印的方法。</p>
+</blockquote>
+<p > 下载 freetype-2.13.2.tar.gz，下载地址：<a href="https://download.savannah.gnu.org/releases/freetype/">https://download.savannah.gnu.org/releases/freetype/</a></p>
+<p > 源码中自带 VS2010 项目，VS2010 以及更新版本的 VS 都可以打开编译，项目目录 <code>\freetype-2.13.2\builds\windows\vc2010</code></p>
+<p > 默认可以生成 debug 版本和 release 的动态、静态库，拷贝 include 文件夹和生成的库到 cpp 项目中。</p>
+<p > 确保本机安装了 opencv 并配置好了环境变量 </p>
+<pre><code class="hljs language-cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;ft2build.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> FT_FREETYPE_H</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;opencv2/opencv.hpp&gt;</span></span>
+
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> cv;
+
+<span class="hljs-function">std::wstring <span class="hljs-title">string_to_wstring</span><span class="hljs-params">(<span class="hljs-type">const</span> std::string&amp; str)</span>
+</span>{
+    std::string strUtf8 = str;
+    <span class="hljs-built_in">setlocale</span>(LC_ALL, <span class="hljs-string">&quot;en_US.UTF-8&quot;</span>);
+    <span class="hljs-type">const</span> <span class="hljs-type">char</span>* chSrc = strUtf8.<span class="hljs-built_in">c_str</span>();
+    <span class="hljs-type">size_t</span> nStr = <span class="hljs-built_in">mbstowcs</span>(<span class="hljs-literal">NULL</span>, chSrc, <span class="hljs-number">0</span>) + <span class="hljs-number">1</span>;
+    <span class="hljs-type">wchar_t</span>* wchDest = <span class="hljs-keyword">new</span> <span class="hljs-type">wchar_t</span>[nStr];
+    <span class="hljs-built_in">memset</span>(wchDest, <span class="hljs-number">0</span>, nStr);
+    <span class="hljs-built_in">mbstowcs</span>(wchDest, chSrc, nStr);
+    std::wstring wStrRes = wchDest;
+    <span class="hljs-keyword">delete</span>[] wchDest;
+    <span class="hljs-keyword">return</span> wStrRes;
+}
+
+
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">put_zh_text</span><span class="hljs-params">(string text)</span>
+</span>{
+    <span class="hljs-comment">// 初始化 FreeType 库 </span>
+    FT_Library library;
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">FT_Init_FreeType</span>(&amp;library))
+    {
+        std::cerr &lt;&lt; <span class="hljs-string">&quot;Could not init freetype library\n&quot;</span>;
+        <span class="hljs-keyword">return</span>;
+    }
+
+    <span class="hljs-comment">// 加载字体 </span>
+    FT_Face face;
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">FT_New_Face</span>(library, <span class="hljs-string">&quot;C:\\Users\\yinnan\\Downloads\\SimSun.ttf&quot;</span>, <span class="hljs-number">0</span>, &amp;face))
+    {
+        std::cerr &lt;&lt; <span class="hljs-string">&quot;Could not open font\n&quot;</span>;
+        <span class="hljs-keyword">return</span>;
+    }
+
+    <span class="hljs-comment">// 设置字体大小 </span>
+    <span class="hljs-built_in">FT_Set_Pixel_Sizes</span>(face, <span class="hljs-number">0</span>, <span class="hljs-number">32</span>);
+
+    cv::Mat frame = cv::<span class="hljs-built_in">imread</span>(<span class="hljs-string">R&quot;(C:\Users\yinnan\Pictures\Saved Pictures\test.png)&quot;</span>);
+
+
+    <span class="hljs-comment">// 将图片转换为 4 通道的图像 </span>
+    cv::Mat img;
+    cv::<span class="hljs-built_in">cvtColor</span>(frame, img, cv::COLOR_BGR2BGRA);
+
+    <span class="hljs-keyword">auto</span> ws = <span class="hljs-built_in">string_to_wstring</span>(text);
+
+    <span class="hljs-comment">// 设置水印的起始位置 </span>
+    <span class="hljs-type">int</span> startX = <span class="hljs-number">100</span>; <span class="hljs-comment">// 水印在图片上的起始 X 坐标 </span>
+    <span class="hljs-type">int</span> startY = <span class="hljs-number">100</span>; <span class="hljs-comment">// 水印在图片上的起始 Y 坐标 </span>
+
+    <span class="hljs-comment">// 设置文字颜色 不透明 </span>
+    <span class="hljs-function">cv::Vec4b <span class="hljs-title">textColor</span><span class="hljs-params">(<span class="hljs-number">255</span>, <span class="hljs-number">255</span>, <span class="hljs-number">255</span>, <span class="hljs-number">255</span>)</span></span>;
+
+    <span class="hljs-comment">// 遍历每个字符 </span>
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span>&amp; c : ws)
+    {
+        <span class="hljs-comment">// 加载字符的字形 </span>
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">FT_Load_Char</span>(face, c, FT_LOAD_RENDER))
+        {
+            std::wcerr &lt;&lt; <span class="hljs-string">&quot;Could not load character &quot;</span> &lt;&lt; c &lt;&lt; <span class="hljs-string">&#x27;\n&#x27;</span>;
+            <span class="hljs-keyword">continue</span>;
+        }
+
+        <span class="hljs-comment">// 将字符的位图添加到图片上 </span>
+        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; face-&gt;glyph-&gt;bitmap.rows; i++)
+        {
+            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = <span class="hljs-number">0</span>; j &lt; face-&gt;glyph-&gt;bitmap.width; j++)
+            {
+                <span class="hljs-comment">// 计算字符在图片上的位置 </span>
+                <span class="hljs-type">int</span> x = startX + j + face-&gt;glyph-&gt;bitmap_left;
+                <span class="hljs-type">int</span> y = startY + i - face-&gt;glyph-&gt;bitmap_top;
+
+                <span class="hljs-comment">// 将字符的位图添加到图片上 </span>
+                <span class="hljs-keyword">if</span> (x &gt;= <span class="hljs-number">0</span> &amp;&amp; x &lt; img.cols &amp;&amp; y &gt;= <span class="hljs-number">0</span> &amp;&amp; y &lt; img.rows)
+                {
+                    <span class="hljs-comment">// 设置文字颜色 </span>
+                    <span class="hljs-keyword">if</span> (face-&gt;glyph-&gt;bitmap.buffer [i * face-&gt;glyph-&gt;bitmap.width + j] &gt; <span class="hljs-number">0</span>)
+                    {
+                        img.<span class="hljs-built_in">at</span>&lt;cv::Vec4b&gt;(y, x) = textColor;
+                    }
+                }
+            }
+        }
+
+        <span class="hljs-comment">// 更新起始 X 坐标，为下一个字符留出空间 </span>
+        startX += face-&gt;glyph-&gt;advance.x &gt;&gt; <span class="hljs-number">6</span>;
+    }
+
+    <span class="hljs-comment">// 如果要将添加水印后的图片通过 VideoWriter 推流，需要转成 3 通道图片 </span>
+    <span class="hljs-comment">/*Mat res;
+    cv::cvtColor (img, res, cv::COLOR_BGRA2BGR, 3);*/</span>
+
+    cv::<span class="hljs-built_in">imwrite</span>(<span class="hljs-string">&quot;zh-img.png&quot;</span>, img);
+
+    <span class="hljs-comment">// 释放 FreeType 资源 </span>
+    <span class="hljs-built_in">FT_Done_Face</span>(face);
+    <span class="hljs-built_in">FT_Done_FreeType</span>(library);
+
+}
+
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span>
+</span>{
+    std::cout &lt;&lt; cv::<span class="hljs-built_in">getBuildInformation</span>() &lt;&lt; std::endl;
+    <span class="hljs-built_in">put_zh_text</span>(<span class="hljs-string">&quot; 测试中文 & quot;</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre><p > 源码下载：</p>
+<p><a href="https://timetick.lanzout.com/iEpUu18ot3ne">https://timetick.lanzout.com/iEpUu18ot3ne</a>
+密码：6sgc</p>
+</div>
+</article>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/highlight.min.js"></script>
+<script>
+  hljs.highlightAll ();
+</script>
+
+
+        <div class="pt-10 h-30">
+          <hr />
+          <div class="pt-2 pb-3 h-18">TimeTick @ 2023</div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

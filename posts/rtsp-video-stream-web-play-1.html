@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>blogger</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/styles/github.min.css"
+    />
+
+    <link rel="stylesheet" href="//unpkg.com/heti/umd/heti.min.css" />
+
+    
+    <script>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement ("script");
+        hm.src = "https://hm.baidu.com/hm.js?9a385ee848ad73f7a5be7a9925adc070";
+        var s = document.getElementsByTagName ("script")[0];
+        s.parentNode.insertBefore (hm, s);
+      })();
+    </script>
+
+    <style type="text/css">
+      html,
+      body {
+        height: 100%;
+
+        /* font-family: "LXGW WenKai Screen", sans-serif; */
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      img {
+        box-shadow: 5px 5px 5px 0px rgba (223, 219, 219, 0.75);
+        /* 水平偏移 垂直偏移 模糊半径 颜色 */
+        border-radius: 10px;
+        /* 设置圆角半径 */
+        border: 1px dashed black;
+        /* 边框宽度 边框样式 边框颜色 */
+      }
+    </style>
+  </head>
+
+  <body class="bg-orange-100 h-full">
+    <div class="h-full flex justify-center">
+      <div class="w-3/5 h-full flex flex-col">
+        <div class="flex pt-10">
+          <h1 class="text-5xl font-bold">TimeTick</h1>
+          <p class="text-xl pt-5 pl-5"></p>
+        </div>
+
+        <div class="w-1/6 flex justify-between relative top-10 text-blue-600">
+          <a href="/index.html"> 首页 </a>
+          <a href="/archive.html"> 归档 </a>
+          <a href="/about.html"> 关于 </a>
+        </div>
+
+        
+
+<article class="markdown-body pt-20 grow">
+  <h2 class="text-3xl font-bold">RTSP 视频流网页播放方案（一）</h2>
+
+  <div class="flex space-x-4">
+    <span > 创建日期： 2023-07-02 </span>
+    <span > 标签： <a href="/tags/RTSP.html">RTSP</a> </span>
+  </div>
+  <hr />
+  <div class=""><blockquote>
+<p > 摄像头提供 RTSP 视频流，使用 ffmpeg 将 RTSP 视频流转成 FLV 流并推送到服务器 <a href="https://github.com/illuspas/Node-Media-Server">node-media-server</a>，网页上可以使用 <a href="https://github.com/xqq/mpegts.js">flv.js</a> 播放 FLV 视频。</p>
+</blockquote>
+<h2 > 一。创建 NodeMediaServer</h2>
+<p > 创建 Nodejs 项目 </p>
+<pre><code class="hljs language-bash">npm init -y
+npm i node-media-server --save
+</code></pre><p><code>index.js</code > 如下：</p>
+<pre><code class="hljs language-js"><span class="hljs-keyword">const</span> <span class="hljs-title class_">NodeMediaServer</span> = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;node-media-server&quot;</span>);
+
+<span class="hljs-keyword">const</span> config = {
+  <span class="hljs-attr">rtmp</span>: {
+    <span class="hljs-attr">port</span>: <span class="hljs-number">1935</span>,
+    <span class="hljs-attr">chunk_size</span>: <span class="hljs-number">60000</span>,
+    <span class="hljs-attr">gop_cache</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">ping</span>: <span class="hljs-number">30</span>,
+    <span class="hljs-attr">ping_timeout</span>: <span class="hljs-number">60</span>,
+  },
+  <span class="hljs-attr">http</span>: {
+    <span class="hljs-attr">port</span>: <span class="hljs-number">8000</span>,
+    <span class="hljs-attr">allow_origin</span>: <span class="hljs-string">&quot;*&quot;</span>,
+  },
+};
+
+<span class="hljs-keyword">const</span> nms = <span class="hljs-keyword">new</span> <span class="hljs-title class_">NodeMediaServer</span>(config);
+nms.<span class="hljs-title function_">run</span>();
+</code></pre><h2 > 二. FFMpeg 推流 </h2>
+<p > 使用 ffmpeg 推流：</p>
+<pre><code class="hljs language-powershell">ffmpeg.exe <span class="hljs-literal">-re</span> <span class="hljs-literal">-i</span> <span class="hljs-string">&quot;rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mp4&quot;</span> <span class="hljs-literal">-c</span> <span class="hljs-built_in">copy</span> <span class="hljs-operator">-f</span> flv <span class="hljs-string">&quot;rtmp://localhost/live/test&quot;</span>
+</code></pre><p > 推流成功后，<a href="https://github.com/illuspas/Node-Media-Server">NodeMediaServer</a > 会打印推流成功的日志。打开 NodeMediaServer 管理界面 <a href="http://localhost:8000/admin">http://localhost:8000/admin</a> 查看 Streams.</p>
+<h2 > 三。网页播放 </h2>
+<p > 新建一个网页 < code>index.html</code > 内容如下：</p>
+<pre><code class="hljs language-html"><span class="hljs-meta">&lt;!doctype <span class="hljs-keyword">html</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&quot;en&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">&quot;UTF-8&quot;</span> /&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">http-equiv</span>=<span class="hljs-string">&quot;X-UA-Compatible&quot;</span> <span class="hljs-attr">content</span>=<span class="hljs-string">&quot;IE=edge&quot;</span> /&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;viewport&quot;</span> <span class="hljs-attr">content</span>=<span class="hljs-string">&quot;width=device-width, initial-scale=1.0&quot;</span> /&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Document<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;https://cdn.bootcss.com/flv.js/1.5.0/flv.min.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;button&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;start&quot;</span> <span class="hljs-attr">onclick</span>=<span class="hljs-string">&quot;start ()&quot;</span> /&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">video</span> <span class="hljs-attr">muted</span> <span class="hljs-attr">autoplay</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;videoElement&quot;</span> <span class="hljs-attr">height</span>=<span class="hljs-string">&quot;500&quot;</span> <span class="hljs-attr">width</span>=<span class="hljs-string">&quot;800&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">video</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript">
+      <span class="hljs-keyword">function</span> <span class="hljs-title function_">createFlvPlayer</span>(<span class="hljs-params"></span>) {
+        <span class="hljs-keyword">try</span> {
+          <span class="hljs-keyword">let</span> videoElement = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">getElementById</span>(<span class="hljs-string">&quot;videoElement&quot;</span>);
+          <span class="hljs-keyword">let</span> flvPlayer = flvjs.<span class="hljs-title function_">createPlayer</span>({
+            <span class="hljs-attr">type</span>: <span class="hljs-string">&quot;flv&quot;</span>,
+            <span class="hljs-attr">isLive</span>: <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">url</span>: <span class="hljs-string">&quot;http://localhost:8000/live/test.flv&quot;</span>,
+          });
+          flvPlayer.<span class="hljs-title function_">attachMediaElement</span>(videoElement);
+          flvPlayer.<span class="hljs-title function_">load</span>();
+          flvPlayer.<span class="hljs-title function_">play</span>();
+
+          flvPlayer.<span class="hljs-title function_">on</span>(flvjs.<span class="hljs-property">Events</span>.<span class="hljs-property">ERROR</span>, <span class="hljs-function">(<span class="hljs-params">errType, errDetail</span>) =&gt;</span> {
+            <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">error</span>(errType);
+            <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">error</span>(errDetail);
+          });
+        } <span class="hljs-keyword">catch</span> (error) {
+          <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">error</span>(<span class="hljs-string">`捕获异常`</span>, error);
+        }
+      }
+
+      <span class="hljs-keyword">function</span> <span class="hljs-title function_">start</span>(<span class="hljs-params"></span>) {
+        <span class="hljs-title function_">createFlvPlayer</span>();
+      }
+    </span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span>
+</code></pre><p > 双击使用浏览器打开，点 start 开始播放。</p>
+<p><strong > 缺点：这种方式得到的 FLV 视频虽然可以在网页上播放，但是延时滞后的非常厉害。</strong></p>
+<p><strong > 参考：<a href="https://github.com/xqq/mpegts.js">flv.js</a>，<a href="https://github.com/illuspas/Node-Media-Server">NodeMediaServer</a></strong></p>
+</div>
+</article>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/highlight.min.js"></script>
+<script>
+  hljs.highlightAll ();
+</script>
+
+
+        <div class="pt-10 h-30">
+          <hr />
+          <div class="pt-2 pb-3 h-18">TimeTick @ 2023</div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

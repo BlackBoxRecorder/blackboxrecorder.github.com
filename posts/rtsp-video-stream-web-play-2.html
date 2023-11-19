@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>blogger</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/styles/github.min.css"
+    />
+
+    <link rel="stylesheet" href="//unpkg.com/heti/umd/heti.min.css" />
+
+    
+    <script>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement ("script");
+        hm.src = "https://hm.baidu.com/hm.js?9a385ee848ad73f7a5be7a9925adc070";
+        var s = document.getElementsByTagName ("script")[0];
+        s.parentNode.insertBefore (hm, s);
+      })();
+    </script>
+
+    <style type="text/css">
+      html,
+      body {
+        height: 100%;
+
+        /* font-family: "LXGW WenKai Screen", sans-serif; */
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      img {
+        box-shadow: 5px 5px 5px 0px rgba (223, 219, 219, 0.75);
+        /* 水平偏移 垂直偏移 模糊半径 颜色 */
+        border-radius: 10px;
+        /* 设置圆角半径 */
+        border: 1px dashed black;
+        /* 边框宽度 边框样式 边框颜色 */
+      }
+    </style>
+  </head>
+
+  <body class="bg-orange-100 h-full">
+    <div class="h-full flex justify-center">
+      <div class="w-3/5 h-full flex flex-col">
+        <div class="flex pt-10">
+          <h1 class="text-5xl font-bold">TimeTick</h1>
+          <p class="text-xl pt-5 pl-5"></p>
+        </div>
+
+        <div class="w-1/6 flex justify-between relative top-10 text-blue-600">
+          <a href="/index.html"> 首页 </a>
+          <a href="/archive.html"> 归档 </a>
+          <a href="/about.html"> 关于 </a>
+        </div>
+
+        
+
+<article class="markdown-body pt-20 grow">
+  <h2 class="text-3xl font-bold">RTSP 视频流网页播放方案（二）</h2>
+
+  <div class="flex space-x-4">
+    <span > 创建日期： 2023-07-04 </span>
+    <span > 标签： <a href="/tags/RTSP.html">RTSP</a> </span>
+  </div>
+  <hr />
+  <div class=""><blockquote>
+<p><a href="https://github.com/mpromonet/webrtc-streamer">webrtc-streamer</a > 将 RTSP 流转换成 webrtc 在网页上播放，你需要运行 webrtc-streamer.exe 来处理 RTSP 到 webrtc 的转换，然后在网页端，使用 webrtc-streamer 提供的 JavaScript 库来播放转换后的 webrtc 视频。</p>
+</blockquote>
+<p><strong > 优点：</strong></p>
+<p > 实时性很好 </p>
+<p><strong > 缺点：</strong></p>
+<p > 资源占用高 </p>
+<p > 未知原因导致无法正常串流，可尝试使用 < code>./webrtc-streamer.exe -o</code > 解决 </p>
+<p > 串流不正常时，网页端偶发会出现卡死 </p>
+<hr>
+<p > 下载并运行 < a href="https://github.com/mpromonet/webrtc-streamer">webrtc-streamer</a>，默认指定端口号是 8000</p>
+<pre><code class="hljs language-powershell">./webrtc<span class="hljs-literal">-streamer</span>.exe
+</code></pre><p><img src="https://yn-public.oss-cn-beijing.aliyuncs.com/blog-images202307052138654.png" alt="Snipaste_2023-07-05_21-14-32"></p>
+<p > 在网页端引入 < code>webrtcstreamer.js</code>，连接 webrtc-streamer 服务的 8000 端口，代码如下：</p>
+<pre><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;libs/adapter.min.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;webrtcstreamer.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript">
+      <span class="hljs-keyword">var</span> webRtcServer = <span class="hljs-literal">null</span>;
+      <span class="hljs-variable language_">window</span>.<span class="hljs-property">onload</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+        webRtcServer = <span class="hljs-keyword">new</span> <span class="hljs-title class_">WebRtcStreamer</span>(
+          <span class="hljs-string">&quot;video&quot;</span>,
+          location.<span class="hljs-property">protocol</span> + <span class="hljs-string">&quot;//&quot;</span> + location.<span class="hljs-property">hostname</span> + <span class="hljs-string">&quot;:8000&quot;</span>
+        );
+        webRtcServer.<span class="hljs-title function_">connect</span>(<span class="hljs-string">&quot;rtsp://213.34.225.97/axis-media/media.amp&quot;</span>);
+      };
+      <span class="hljs-variable language_">window</span>.<span class="hljs-property">onbeforeunload</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+        webRtcServer.<span class="hljs-title function_">disconnect</span>();
+      };
+    </span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">video</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;video&quot;</span> /&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span>
+</code></pre><p > 一个简单的示例可以在这里下载：如下图，</p>
+<p><img src="https://yn-public.oss-cn-beijing.aliyuncs.com/blog-images202307052142346.png" alt="Snipaste_2023-07-04_22-18-53"></p>
+<p>VSCode 安装个 live server 插件，打开网页即可播放源 RTSP 视频流。</p>
+<p > 命令行使用：</p>
+<pre><code class="hljs language-powershell">./webrtc<span class="hljs-literal">-streamer</span> [-<span class="hljs-type">H</span> <span class="hljs-type">http</span> <span class="hljs-type">port</span>] [-<span class="hljs-type">S</span>[<span class="hljs-type">embeded</span> <span class="hljs-type">stun</span> <span class="hljs-type">address</span>]] -[<span class="hljs-type">v</span>[<span class="hljs-type">v</span>]]  [<span class="hljs-type">urls...</span>]
+./webrtc<span class="hljs-literal">-streamer</span> [-<span class="hljs-type">H</span> <span class="hljs-type">http</span> <span class="hljs-type">port</span>] [-<span class="hljs-type">s</span>[<span class="hljs-type">external</span> <span class="hljs-type">stun</span> <span class="hljs-type">address</span>]] -[<span class="hljs-type">v</span>[<span class="hljs-type">v</span>]] [<span class="hljs-type">urls...</span>]
+./webrtc<span class="hljs-literal">-streamer</span> <span class="hljs-literal">-V</span>
+    <span class="hljs-literal">-v</span>[<span class="hljs-type">v</span>[<span class="hljs-type">v</span>]]           : verbosity
+    <span class="hljs-literal">-V</span>                 : print version
+    <span class="hljs-literal">-C</span> config.json                     : load urls from JSON config file
+    <span class="hljs-literal">-n</span> name <span class="hljs-literal">-u</span> videourl <span class="hljs-literal">-U</span> audiourl    : register a name <span class="hljs-keyword">for</span> a video url and an audio url
+    [<span class="hljs-type">url</span>]                              : url to register <span class="hljs-keyword">in</span> the source list
+
+    <span class="hljs-literal">-H</span> [<span class="hljs-type">hostname</span>:] port : HTTP server binding (default <span class="hljs-number">0.0</span>.<span class="hljs-number">0.0</span>:<span class="hljs-number">8000</span>)
+    <span class="hljs-literal">-w</span> webroot         : path to get files
+    <span class="hljs-literal">-c</span> sslkeycert      : path to private key and certificate <span class="hljs-keyword">for</span> HTTPS
+    <span class="hljs-literal">-N</span> nbthreads       : number of threads <span class="hljs-keyword">for</span> HTTP server
+    <span class="hljs-literal">-A</span> passwd          : password file <span class="hljs-keyword">for</span> HTTP server access
+    <span class="hljs-literal">-D</span> authDomain      : authentication domain <span class="hljs-keyword">for</span> HTTP server access (default:mydomain.com)
+
+    <span class="hljs-literal">-S</span>[<span class="hljs-type">stun_address</span>]                   : <span class="hljs-built_in">start</span> embeded STUN server bind to address (default <span class="hljs-number">0.0</span>.<span class="hljs-number">0.0</span>:<span class="hljs-number">3478</span>)
+    <span class="hljs-literal">-s</span>[<span class="hljs-type">stun_address</span>]                   : use an external STUN server (default:stun.l.google.com:<span class="hljs-number">19302</span> , -:means no STUN)
+    <span class="hljs-literal">-T</span>[<span class="hljs-type">username</span>:<span class="hljs-type">password</span><span class="hljs-selector-tag">@</span>] turn_address : <span class="hljs-built_in">start</span> embeded TURN server (default:disabled)
+    <span class="hljs-literal">-t</span>[<span class="hljs-type">username</span>:<span class="hljs-type">password</span><span class="hljs-selector-tag">@</span>] turn_address : use an external TURN relay server (default:disabled)
+    <span class="hljs-literal">-R</span> [<span class="hljs-type">Udp</span> <span class="hljs-type">port</span> <span class="hljs-type">range</span> <span class="hljs-type">min</span>:<span class="hljs-type">max</span>]        : <span class="hljs-built_in">Set</span> the webrtc udp port range (default <span class="hljs-number">0</span>:<span class="hljs-number">65535</span>)
+    <span class="hljs-literal">-W</span> webrtc_trials_fields            : <span class="hljs-built_in">Set</span> the webrtc trials fields (default:WebRTC<span class="hljs-literal">-FrameDropper</span>/Disabled/)
+    <span class="hljs-literal">-a</span>[<span class="hljs-type">audio</span> <span class="hljs-type">layer</span>]                    : spefify audio capture layer to use (default:<span class="hljs-number">0</span>)
+    <span class="hljs-literal">-q</span>[<span class="hljs-type">filter</span>]                         : spefify publish <span class="hljs-keyword">filter</span> (default:.*)
+    <span class="hljs-literal">-o</span>                                 : use null codec (keep frame encoded)
+</code></pre></div>
+</article>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/highlight.min.js"></script>
+<script>
+  hljs.highlightAll ();
+</script>
+
+
+        <div class="pt-10 h-30">
+          <hr />
+          <div class="pt-2 pb-3 h-18">TimeTick @ 2023</div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

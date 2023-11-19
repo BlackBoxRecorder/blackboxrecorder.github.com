@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>blogger</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/styles/github.min.css"
+    />
+
+    <link rel="stylesheet" href="//unpkg.com/heti/umd/heti.min.css" />
+
+    
+    <script>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement ("script");
+        hm.src = "https://hm.baidu.com/hm.js?9a385ee848ad73f7a5be7a9925adc070";
+        var s = document.getElementsByTagName ("script")[0];
+        s.parentNode.insertBefore (hm, s);
+      })();
+    </script>
+
+    <style type="text/css">
+      html,
+      body {
+        height: 100%;
+
+        /* font-family: "LXGW WenKai Screen", sans-serif; */
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      img {
+        box-shadow: 5px 5px 5px 0px rgba (223, 219, 219, 0.75);
+        /* 水平偏移 垂直偏移 模糊半径 颜色 */
+        border-radius: 10px;
+        /* 设置圆角半径 */
+        border: 1px dashed black;
+        /* 边框宽度 边框样式 边框颜色 */
+      }
+    </style>
+  </head>
+
+  <body class="bg-orange-100 h-full">
+    <div class="h-full flex justify-center">
+      <div class="w-3/5 h-full flex flex-col">
+        <div class="flex pt-10">
+          <h1 class="text-5xl font-bold">TimeTick</h1>
+          <p class="text-xl pt-5 pl-5"></p>
+        </div>
+
+        <div class="w-1/6 flex justify-between relative top-10 text-blue-600">
+          <a href="/index.html"> 首页 </a>
+          <a href="/archive.html"> 归档 </a>
+          <a href="/about.html"> 关于 </a>
+        </div>
+
+        
+
+<article class="markdown-body pt-20 grow">
+  <h2 class="text-3xl font-bold">ffmpeg 常用命令 </h2>
+
+  <div class="flex space-x-4">
+    <span > 创建日期： 2023-04-22 </span>
+    <span > 标签： <a href="/tags/ffmpeg.html">ffmpeg</a> </span>
+  </div>
+  <hr />
+  <div class=""><h3 > 获得媒体文件的信息 </h3>
+<pre><code class="hljs language-bash">ffmpeg -i video_file.mp4 -hide_banner
+</code></pre><h3 > 从视频中抽取图片 </h3>
+<p>r 代表了帧率（一秒内导出多少张图像，默认 25）， -f 代表了输出格式 (image2 实际上是 image2 序列的意思）
+最后一个参数 (输出文件) 有一个有趣的命名：它使用 %3d 来指示输出的图片有三位数字 (000, 001, 等等.)。你也可以用 %2d (两位数字) 或者 %4d (4 位数字) 。</p>
+<pre><code class="hljs language-bash">ffmpeg -i video.mp4 -r 1 -f image2 image-%3d.png
+</code></pre><h3 > 为视频增加字幕 </h3>
+<pre><code class="hljs language-bash">ffmpeg -i video.mp4 -i subtitles.srt -c:v copy -c:a copy -preset veryfast -c:s mov_text -map 0 -map 1 output.mp4
+</code></pre><h3 > 压缩媒体文件 </h3>
+<pre><code class="hljs language-bash">ffmpeg -i video_input.mp4 -c:v libx264 -crf 28 video_output.mp4
+</code></pre><h3 > 裁剪媒体文件 </h3>
+<p > 开始时间 (-ss HH:MM:SS)，持续秒数 (-t duration)，结束时间 (-to HH:MM:SS)，开始秒数 (-s duration)</p>
+<pre><code class="hljs language-bash">ffmpeg -i input_audio.mp3 -ss 00:01:14 output_audio.mp3
+ffmpeg -i input_audio.wav -ss 00:00:30 -t 10 output_audio.wav
+ffmpeg -i input_video.h264 -ss 00:01:30 -to 00:01:40 output_video.h264
+ffmpeg -i input_audio.ogg -ss 5 output_audio.ogg
+</code></pre><h3 > 拼接媒体文件 </h3>
+<pre><code class="hljs language-bash">vim videos_to_join.txt
+/home/ubuntu/Desktop/video_1.mp4
+/home/ubuntu/Desktop/video_2.mp4
+/home/ubuntu/Desktop/video_3.mp4
+ffmpeg -f concat -i join.txt output.mp4
+</code></pre><h3 > 将图片转变为视频 </h3>
+<pre><code class="hljs language-bash"><span class="hljs-built_in">cat</span> my_photos/* | ffmpeg -f image2pipe -i - -c:v copy video.mkv
+<span class="hljs-built_in">cat</span> my_photos/* | ffmpeg -framerate 1 -f image2pipe -i - -c:v copy video.mkv
+<span class="hljs-built_in">cat</span> my_photos/* | ffmpeg -framerate 0.40 -f image2pipe -i - -i audio.wav -c copy video.mkv
+</code></pre><h3 > 录制屏幕 </h3>
+<pre><code class="hljs language-bash">ffmpeg -f x11grab -s 1920x1080 -i :0.0 output.mp4
+ffmpeg -f x11grab -s $(xdpyinfo | grep dimensions | awk <span class="hljs-string">&#x27;{print $2;}&#x27;</span>) -i :0.0 output.mp4
+</code></pre><h3 > 更改播放速度 </h3>
+<pre><code class="hljs language-bash">ffmpeg -i input.mkv -vf <span class="hljs-string">&quot;setpts=0.5*PTS&quot;</span> output.mkv
+ffmpeg -i input.mp4 -vf <span class="hljs-string">&quot;setpts=2*PTS&quot;</span> output,mp4
+</code></pre><p > 第一个命令让播放速度加倍了，第二个则是让播放速度降低了一半。</p>
+<h3 > 播放流地址 </h3>
+<p > 可以用方向键快进，鼠标点击跳转位置 </p>
+<pre><code class="hljs language-bash">ffplay rtsp://192.168.2.3:8554/test
+</code></pre><h3>UDP 推流 </h3>
+<pre><code class="hljs language-bash">ffmpeg -re -i input.mp4 -c copy -f rtsp rtsp://127.0.0.1:8554/stream
+</code></pre><h3>TCP 推流 </h3>
+<pre><code class="hljs language-bash">ffmpeg -re -i input.mp4 -c copy -rtsp_transport tcp -f rtsp rtsp://127.0.0.1:8554/stream
+</code></pre><h3 > 循环推流 </h3>
+<pre><code class="hljs language-bash">ffmpeg -re -stream_loop -1 -i input.mp4 -c copy -f rtsp rtsp://127.0.0.1:8554/stream
+</code></pre><h3>FFmpeg 拉流保存成视频 </h3>
+<pre><code class="hljs language-bash">ffmpeg -stimeout 30000000 -i rtsp://127.0.0.1:8554/stream -c copy output.mp4
+ffmpeg –i rtsp://192.168.3.205:5555/test –vcodec copy out.avi
+</code></pre><h3 > 视频旋转 </h3>
+<pre><code class="hljs language-bash">ffplay -i test.mp4 -vf transpose=1
+</code></pre><h3 > 视频反转 </h3>
+<pre><code class="hljs language-bash">ffplay test.mp4 -vf hflip
+ffplay test.mp4 -vf vflip
+</code></pre><h3 > 视频旋转和反转 </h3>
+<pre><code class="hljs language-bash">ffplay test.mp4 -vf hflip,transpose=1
+</code></pre><h3 > 音频变速播放 </h3>
+<pre><code class="hljs language-bash">ffplay -i test.mp4 -af atempo=2
+</code></pre><h3 > 视频变速播放 </h3>
+<pre><code class="hljs language-bash">ffplay -i test.mp4 -vf setpts=PTS/2
+</code></pre><h3 > 音视频同时变速 </h3>
+<pre><code class="hljs language-bash">ffplay -i test.mp4 -vf setpts=PTS/2 -af atempo=2
+</code></pre><h3 > 修改音视频码率：</h3>
+<pre><code class="hljs language-bash">ffmpeg -i test.mp4 -b:v 400k -b:a 192k output_bva.mp4
+</code></pre><h3 > 修改视频分辨率：</h3>
+<pre><code class="hljs language-bash">ffmpeg -i test.mp4 -s 480x270 output_480x270.mp4
+</code></pre><h3 > 改变编码格式：</h3>
+<pre><code class="hljs language-bash">ffmpeg -i test.mp4 -vcodec libx265 -acodec libmp3lame out_h265_mp3.mkv
+</code></pre></div>
+</article>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/highlight.min.js"></script>
+<script>
+  hljs.highlightAll ();
+</script>
+
+
+        <div class="pt-10 h-30">
+          <hr />
+          <div class="pt-2 pb-3 h-18">TimeTick @ 2023</div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

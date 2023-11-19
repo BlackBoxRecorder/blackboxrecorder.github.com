@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>blogger</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/styles/github.min.css"
+    />
+
+    <link rel="stylesheet" href="//unpkg.com/heti/umd/heti.min.css" />
+
+    
+    <script>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement ("script");
+        hm.src = "https://hm.baidu.com/hm.js?9a385ee848ad73f7a5be7a9925adc070";
+        var s = document.getElementsByTagName ("script")[0];
+        s.parentNode.insertBefore (hm, s);
+      })();
+    </script>
+
+    <style type="text/css">
+      html,
+      body {
+        height: 100%;
+
+        /* font-family: "LXGW WenKai Screen", sans-serif; */
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      img {
+        box-shadow: 5px 5px 5px 0px rgba (223, 219, 219, 0.75);
+        /* 水平偏移 垂直偏移 模糊半径 颜色 */
+        border-radius: 10px;
+        /* 设置圆角半径 */
+        border: 1px dashed black;
+        /* 边框宽度 边框样式 边框颜色 */
+      }
+    </style>
+  </head>
+
+  <body class="bg-orange-100 h-full">
+    <div class="h-full flex justify-center">
+      <div class="w-3/5 h-full flex flex-col">
+        <div class="flex pt-10">
+          <h1 class="text-5xl font-bold">TimeTick</h1>
+          <p class="text-xl pt-5 pl-5"></p>
+        </div>
+
+        <div class="w-1/6 flex justify-between relative top-10 text-blue-600">
+          <a href="/index.html"> 首页 </a>
+          <a href="/archive.html"> 归档 </a>
+          <a href="/about.html"> 关于 </a>
+        </div>
+
+        
+
+<article class="markdown-body pt-20 grow">
+  <h2 class="text-3xl font-bold"> 使用 OpenCV 和 GStreamer 将摄像头推流成 RTSP</h2>
+
+  <div class="flex space-x-4">
+    <span > 创建日期： 2023-09-09 </span>
+    <span > 标签： <a href="/tags/OpenCV.html">OpenCV</a> </span>
+  </div>
+  <hr />
+  <div class=""><p > 使用 OpenCV 将笔记本摄像头推流成 RTSP</p>
+<ol>
+<li > 下载 Gstreamer</li>
+<li > 克隆 opencv 源码 </li>
+<li > 使用 cmake 构建 </li>
+<li > 代码示例 </li>
+</ol>
+<p > 从 Gstreamer 官网下载安装包，先安装 runtime installer，再安装 development installer。</p>
+<p><img src="https://yn-public.oss-cn-beijing.aliyuncs.com/image-20230909163632285.png" alt="image-20230909163632285"></p>
+<p > 安装完成后添加环境变量 </p>
+<p><img src="https://yn-public.oss-cn-beijing.aliyuncs.com/image-20230909163712456.png" alt="image-20230909163712456"></p>
+<p > 克隆 opencv 源码，使用 git 克隆源码，这样再构建中下载是从 gitcode 下载；如果下载了 zip，会从 GitHub 下载速度很慢。</p>
+<p><img src="https://yn-public.oss-cn-beijing.aliyuncs.com/image-20230909163740673.png" alt="image-20230909163740673"></p>
+<p > 使用 Git Bash GUI 克隆 </p>
+<p><img src="https://yn-public.oss-cn-beijing.aliyuncs.com/image-20230909163810322.png" alt="image-20230909163810322"></p>
+<p > 然后切换到 4.8.0 的 tag</p>
+<p><img src="https://yn-public.oss-cn-beijing.aliyuncs.com/image-20230909163836637.png" alt="image-20230909163836637"></p>
+<p > 打开 cmake gui，填写源码目录和安装目录；</p>
+<p><img src="https://yn-public.oss-cn-beijing.aliyuncs.com/image-20230909164005704.png" alt="image-20230909164005704"></p>
+<p > 然后点击 configure，可以看到 configure 过程中 gitcode 下载 </p>
+<p><img src="https://yn-public.oss-cn-beijing.aliyuncs.com/image-20230909164042422.png" alt="image-20230909164042422"></p>
+<p>configure 完成之后搜索 gstreamer，相关的 GStreamer 库路径已经自动识别，默认勾选了 WITH_GSTREAMER</p>
+<p><img src="https://yn-public.oss-cn-beijing.aliyuncs.com/image-20230909190948591.png" alt="image-20230909190948591"></p>
+<p > 然后再次点击 Configure，查看构建信息，GStreamer 选项已打开 </p>
+<p><img src="https://yn-public.oss-cn-beijing.aliyuncs.com/image-20230909191152282.png" alt="image-20230909191152282"></p>
+<p > 点击 Generate，完成后 Open Project，使用 VS2022 打开项目 </p>
+<p><img src="https://yn-public.oss-cn-beijing.aliyuncs.com/image-20230909164232808.png" alt="image-20230909164232808"></p>
+<p > 生成 ALL_BUILD，再生成 INSTALL。opencv 就安装在了指定的 build 路径下的 install 目录里。目录中包含 include 和 x64\vs17\bin、x64\vs17\lib 就是我们需要的。</p>
+<p > 使用 VS2022 创建一个 CMake 项目，推流的关键代码如下：</p>
+<pre><code class="hljs language-cpp"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">cvstream::read_rtsp</span><span class="hljs-params">()</span>
+</span>{
+    <span class="hljs-keyword">do</span>
+    {
+        <span class="hljs-function">cv::VideoCapture <span class="hljs-title">vid_capture</span><span class="hljs-params">(videosource)</span></span>;
+
+        <span class="hljs-keyword">if</span> (!vid_capture.<span class="hljs-built_in">isOpened</span>())
+        {
+            cout &lt;&lt; <span class="hljs-string">&quot;Error opening video stream or file&quot;</span> &lt;&lt; endl;
+            <span class="hljs-keyword">return</span>;
+        }
+        <span class="hljs-keyword">else</span>
+        {
+            <span class="hljs-type">int</span> fps = vid_capture.<span class="hljs-built_in">get</span>(CAP_PROP_FPS);
+            cout &lt;&lt; <span class="hljs-string">&quot;Frames per second :&quot;</span> &lt;&lt; fps;
+        }
+
+        dWidth = vid_capture.<span class="hljs-built_in">get</span>(cv::CAP_PROP_FRAME_WIDTH);
+        dHeight = vid_capture.<span class="hljs-built_in">get</span>(cv::CAP_PROP_FRAME_HEIGHT);
+
+        <span class="hljs-keyword">while</span> (vid_capture.<span class="hljs-built_in">isOpened</span>())
+        {
+            Mat frame;
+
+            <span class="hljs-type">bool</span> isSuccess = vid_capture.<span class="hljs-built_in">read</span>(frame);
+
+            <span class="hljs-keyword">if</span> (isSuccess == <span class="hljs-literal">true</span>)
+            {
+                <span class="hljs-function">std::lock_guard&lt;std::mutex&gt; <span class="hljs-title">guard</span><span class="hljs-params">(mutex)</span></span>;
+
+                <span class="hljs-type">bool</span> flag = <span class="hljs-keyword">this</span>-&gt;frame.<span class="hljs-built_in">empty</span>();
+
+                <span class="hljs-keyword">this</span>-&gt;frame = frame.<span class="hljs-built_in">clone</span>();
+                <span class="hljs-keyword">if</span> (flag) {
+                    <span class="hljs-keyword">this</span>-&gt;streamThread = std::<span class="hljs-built_in">thread</span>(&amp;cvstream::stream_publish, <span class="hljs-keyword">this</span>);
+                }
+
+                std::this_thread::<span class="hljs-built_in">sleep_for</span>(std::chrono::<span class="hljs-built_in">milliseconds</span>(<span class="hljs-number">10</span>));
+            }
+
+            <span class="hljs-keyword">if</span> (isSuccess == <span class="hljs-literal">false</span>)
+            {
+                cout &lt;&lt; <span class="hljs-string">&quot;video end&quot;</span> &lt;&lt; endl;
+                isWorking = <span class="hljs-literal">false</span>;
+                <span class="hljs-keyword">break</span>;
+            }
+        }
+
+        vid_capture.<span class="hljs-built_in">release</span>();
+        <span class="hljs-keyword">return</span>;
+    } <span class="hljs-keyword">while</span> (<span class="hljs-literal">false</span>);
+
+}
+
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">cvstream::stream_publish</span><span class="hljs-params">()</span>
+</span>{
+    std::string gst = <span class="hljs-string">&quot;appsrc ! videoconvert ! video/x-raw, format=I420 ! x264enc speed-preset=veryfast \
+        bitrate=4096 key-int-max=40 ! rtspclientsink location=rtsp://127.0.0.1:8554/&quot;</span>+stream_url;
+    <span class="hljs-function">cv::VideoWriter <span class="hljs-title">video</span><span class="hljs-params">(gst, cv::CAP_GSTREAMER, <span class="hljs-number">0</span>, <span class="hljs-number">25</span>, cv::Size (dWidth, dHeight), <span class="hljs-literal">true</span>)</span></span>;
+
+    <span class="hljs-keyword">if</span> (!video.<span class="hljs-built_in">isOpened</span>()) {
+        std::cerr &lt;&lt; <span class="hljs-string">&quot;Could not open the output video for write\n&quot;</span>;
+        <span class="hljs-keyword">return</span>;
+    }
+
+    <span class="hljs-keyword">while</span> (isWorking)
+    {
+        cv::Mat frame;
+        {
+            <span class="hljs-function">std::lock_guard&lt;std::mutex&gt; <span class="hljs-title">guard</span><span class="hljs-params">(mutex)</span></span>;
+            frame = <span class="hljs-keyword">this</span>-&gt;frame.<span class="hljs-built_in">clone</span>();
+        }
+
+        video.<span class="hljs-built_in">write</span>(frame);
+        std::this_thread::<span class="hljs-built_in">sleep_for</span>(std::chrono::<span class="hljs-built_in">milliseconds</span>(<span class="hljs-number">10</span>));
+    }
+}
+</code></pre><p > 代码中的 < code>rtsp://127.0.0.1:8554</code > 是 RTSP 服务器的地址，这里使用 < a href="https://github.com/bluenviron/mediamtx">mediamtx</a > 作为 RTSP 服务器。</p>
+<p > 完整代码下载：<a href="https://timetick.lanzout.com/izyVM17ug4wb">opencv_video_stream</a></p>
+</div>
+</article>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/highlight.min.js"></script>
+<script>
+  hljs.highlightAll ();
+</script>
+
+
+        <div class="pt-10 h-30">
+          <hr />
+          <div class="pt-2 pb-3 h-18">TimeTick @ 2023</div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

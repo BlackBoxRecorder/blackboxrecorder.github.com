@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>blogger</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/styles/github.min.css"
+    />
+
+    <link rel="stylesheet" href="//unpkg.com/heti/umd/heti.min.css" />
+
+    
+    <script>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement ("script");
+        hm.src = "https://hm.baidu.com/hm.js?9a385ee848ad73f7a5be7a9925adc070";
+        var s = document.getElementsByTagName ("script")[0];
+        s.parentNode.insertBefore (hm, s);
+      })();
+    </script>
+
+    <style type="text/css">
+      html,
+      body {
+        height: 100%;
+
+        /* font-family: "LXGW WenKai Screen", sans-serif; */
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      img {
+        box-shadow: 5px 5px 5px 0px rgba (223, 219, 219, 0.75);
+        /* 水平偏移 垂直偏移 模糊半径 颜色 */
+        border-radius: 10px;
+        /* 设置圆角半径 */
+        border: 1px dashed black;
+        /* 边框宽度 边框样式 边框颜色 */
+      }
+    </style>
+  </head>
+
+  <body class="bg-orange-100 h-full">
+    <div class="h-full flex justify-center">
+      <div class="w-3/5 h-full flex flex-col">
+        <div class="flex pt-10">
+          <h1 class="text-5xl font-bold">TimeTick</h1>
+          <p class="text-xl pt-5 pl-5"></p>
+        </div>
+
+        <div class="w-1/6 flex justify-between relative top-10 text-blue-600">
+          <a href="/index.html"> 首页 </a>
+          <a href="/archive.html"> 归档 </a>
+          <a href="/about.html"> 关于 </a>
+        </div>
+
+        
+
+<article class="markdown-body pt-20 grow">
+  <h2 class="text-3xl font-bold"> 将图片处理为统一分辨率 </h2>
+
+  <div class="flex space-x-4">
+    <span > 创建日期： 2023-08-01 </span>
+    <span > 标签： <a href="/tags/ 图片处理.html"> 图片处理 </a> </span>
+  </div>
+  <hr />
+  <div class=""><p > 下载了一些壁纸，各种分辨率的都有，设置成桌面壁纸剧中显示，分辨率大的只显示中间，比例不合适的有黑边，看起来很不爽。</p>
+<p > 我的显示器是 1920×1080 分辨率，想把这些壁纸统一成 1920×1080 的分辨率，找到的工具 XnResize 竟然实现不了，所以找到了 C# 的图片处理库 < a href="https://docs.sixlabors.com/index.html">ImageSharp</a>。</p>
+<p > 主要使用这个库的 Resize 功能，有好几种 ResizeMode，有不同效果，可以自己尝试。具体参考官方 < a href="https://docs.sixlabors.com/api/ImageSharp/SixLabors.ImageSharp.Processing.ResizeMode.html">API</a>。</p>
+<p><strong > 注意 </strong>：ImageSharp 貌似只能在.Net 6 使用，在.Net Framework 4.8 使用不了 </p>
+<p > 完整代码如下：</p>
+<pre><code class="hljs language-csharp"><span class="hljs-keyword">namespace</span> <span class="hljs-title">ImageSharpDemo</span>
+{
+    <span class="hljs-keyword">internal</span> <span class="hljs-keyword">class</span> <span class="hljs-title">Program</span>
+    {
+        <span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Main</span>(<span class="hljs-params"><span class="hljs-built_in">string</span>[] args</span>)</span>
+        {
+            <span class="hljs-keyword">const</span> <span class="hljs-built_in">int</span> WIDTH = <span class="hljs-number">1920</span>;
+            <span class="hljs-keyword">const</span> <span class="hljs-built_in">int</span> HEIGHT = <span class="hljs-number">1080</span>;
+            <span class="hljs-built_in">bool</span> single = <span class="hljs-literal">false</span>;
+
+            <span class="hljs-comment">// 需要处理的图片目录 </span>
+            <span class="hljs-keyword">var</span> imgdir = <span class="hljs-string">@&quot;C:\data\images\wallpaper&quot;</span>;
+            <span class="hljs-comment">// 图片处理后的存放目录 </span>
+            <span class="hljs-keyword">var</span> outdir = <span class="hljs-string">@&quot;C:\Users\usr\Downloads\wallbagres&quot;</span>;
+
+            <span class="hljs-keyword">if</span> (single)
+            {<span class="hljs-comment">// 处理单个图片 </span>
+                <span class="hljs-keyword">var</span> simgfile = <span class="hljs-string">@&quot;C:\Users\usr\Downloads\resizetest\1.jpg&quot;</span>;
+                <span class="hljs-keyword">var</span> soutfile = <span class="hljs-string">@&quot;C:\Users\usr\Downloads\resizetest\1_out.jpg&quot;</span>;
+
+                ImgResize (WIDTH, HEIGHT, simgfile, soutfile);
+                Console.WriteLine (<span class="hljs-string">&quot;done&quot;</span>);
+                <span class="hljs-keyword">return</span>;
+            }
+
+            <span class="hljs-keyword">if</span> (!Directory.Exists (imgdir))
+            {
+                Console.WriteLine (<span class="hljs-string">&quot; 目录不存在 & quot;</span>);
+                <span class="hljs-keyword">return</span>;
+            }
+
+            <span class="hljs-keyword">if</span> (!Directory.Exists (outdir))
+            {
+                Directory.CreateDirectory (outdir);
+            }
+
+            <span class="hljs-keyword">var</span> imgfiles = Directory.GetFiles (imgdir, <span class="hljs-string">&quot;&quot;</span>, SearchOption.AllDirectories);
+            <span class="hljs-keyword">var</span> total = imgfiles.Length;
+            <span class="hljs-built_in">int</span> idx = <span class="hljs-number">0</span>;
+            <span class="hljs-keyword">foreach</span> (<span class="hljs-keyword">var</span> imgfile <span class="hljs-keyword">in</span> imgfiles)
+            {
+                idx++;
+                <span class="hljs-keyword">var</span> imgfi = <span class="hljs-keyword">new</span> FileInfo (imgfile);
+                <span class="hljs-keyword">var</span> imgname = imgfi.Name;
+                <span class="hljs-keyword">var</span> outfile = Path.Combine (outdir, imgname);
+
+                ImgResize (WIDTH, HEIGHT, imgfile, outfile);
+                Console.WriteLine (<span class="hljs-string">$&quot;[<span class="hljs-subst">{idx}</span>/<span class="hljs-subst">{total}</span>]  resize <span class="hljs-subst">{imgname}</span>&quot;</span>);
+            }
+
+        }
+
+        <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">ImgResize</span>(<span class="hljs-params"><span class="hljs-built_in">int</span> WIDTH, <span class="hljs-built_in">int</span> HEIGHT, <span class="hljs-built_in">string</span> img, <span class="hljs-built_in">string</span> output</span>)</span>
+        {
+            <span class="hljs-keyword">try</span>
+            {
+                <span class="hljs-keyword">using</span> Image image = Image.Load (img);
+                <span class="hljs-keyword">if</span> (image.Width * <span class="hljs-number">9</span> == image.Height * <span class="hljs-number">16</span> &amp;&amp;
+                    image.Width &gt;= WIDTH &amp;&amp; image.Height &gt;= HEIGHT)
+                {<span class="hljs-comment">// 比例是 16：9</span>
+                    image.Mutate (x =&gt; x.Resize (WIDTH, HEIGHT));
+                    image.Save (output);
+                }
+                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (image.Width &gt;= WIDTH &amp;&amp; image.Height &gt;= HEIGHT)
+                {<span class="hljs-comment">// 从图片中取最大的 16：9 区域 </span>
+                    image.Mutate (x =&gt;
+                    {
+                        x.Resize (<span class="hljs-keyword">new</span> ResizeOptions
+                        {
+                            Size = <span class="hljs-keyword">new</span> Size (WIDTH, HEIGHT),
+                            Mode = ResizeMode.Crop,
+                        });
+                    });
+
+                    image.Save (output);
+                }
+                <span class="hljs-keyword">else</span>
+                {
+                    Console.WriteLine (<span class="hljs-string">$&quot; 分辨率 <span class="hljs-subst">{image.Width}</span>*<span class="hljs-subst">{image.Height}</span> 太小，跳过。&quot;</span>);
+                }
+            }
+            <span class="hljs-keyword">catch</span> (Exception ex)
+            {
+                Console.WriteLine (ex);
+            }
+        }
+    }
+}
+</code></pre></div>
+</article>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/highlight.min.js"></script>
+<script>
+  hljs.highlightAll ();
+</script>
+
+
+        <div class="pt-10 h-30">
+          <hr />
+          <div class="pt-2 pb-3 h-18">TimeTick @ 2023</div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

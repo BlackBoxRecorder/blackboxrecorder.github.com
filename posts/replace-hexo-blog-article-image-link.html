@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>blogger</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/styles/github.min.css"
+    />
+
+    <link rel="stylesheet" href="//unpkg.com/heti/umd/heti.min.css" />
+
+    
+    <script>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement ("script");
+        hm.src = "https://hm.baidu.com/hm.js?9a385ee848ad73f7a5be7a9925adc070";
+        var s = document.getElementsByTagName ("script")[0];
+        s.parentNode.insertBefore (hm, s);
+      })();
+    </script>
+
+    <style type="text/css">
+      html,
+      body {
+        height: 100%;
+
+        /* font-family: "LXGW WenKai Screen", sans-serif; */
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      img {
+        box-shadow: 5px 5px 5px 0px rgba (223, 219, 219, 0.75);
+        /* 水平偏移 垂直偏移 模糊半径 颜色 */
+        border-radius: 10px;
+        /* 设置圆角半径 */
+        border: 1px dashed black;
+        /* 边框宽度 边框样式 边框颜色 */
+      }
+    </style>
+  </head>
+
+  <body class="bg-orange-100 h-full">
+    <div class="h-full flex justify-center">
+      <div class="w-3/5 h-full flex flex-col">
+        <div class="flex pt-10">
+          <h1 class="text-5xl font-bold">TimeTick</h1>
+          <p class="text-xl pt-5 pl-5"></p>
+        </div>
+
+        <div class="w-1/6 flex justify-between relative top-10 text-blue-600">
+          <a href="/index.html"> 首页 </a>
+          <a href="/archive.html"> 归档 </a>
+          <a href="/about.html"> 关于 </a>
+        </div>
+
+        
+
+<article class="markdown-body pt-20 grow">
+  <h2 class="text-3xl font-bold"> 替换 Hexo 博客文章中的图片链接 </h2>
+
+  <div class="flex space-x-4">
+    <span > 创建日期： 2023-07-19 </span>
+    <span > 标签： <a href="/tags/Hexo.html">Hexo</a> </span>
+  </div>
+  <hr />
+  <div class=""><p > 我一般用 Typora 编辑 Hexo 文章，插入的图片会通过 Picgo 自动上传到阿里云 OSS，然后 Hexo 发布后静态网页中的图片链接是阿里云 OSS 外链地址。静态网站是放在一台阿里云服务器上的，这样别人访问页面图片是阿里云 OSS 外链会产生费用，所以想在生成文章后，把其中的图片下载到服务器上然后替换图片链接 </p>
+<pre><code class="hljs language-js"><span class="hljs-keyword">const</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;fs&quot;</span>);
+<span class="hljs-keyword">const</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;path&quot;</span>);
+<span class="hljs-keyword">const</span> download = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;download&quot;</span>);
+
+<span class="hljs-keyword">const</span> getAllFile = <span class="hljs-keyword">function</span> (<span class="hljs-params">dir</span>) {
+  <span class="hljs-keyword">let</span> res = [];
+  <span class="hljs-keyword">function</span> <span class="hljs-title function_">traverse</span>(<span class="hljs-params">dir</span>) {
+    fs.<span class="hljs-title function_">readdirSync</span>(dir).<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">file</span>) =&gt;</span> {
+      <span class="hljs-keyword">const</span> pathname = path.<span class="hljs-title function_">join</span>(dir, file);
+      <span class="hljs-keyword">if</span> (fs.<span class="hljs-title function_">statSync</span>(pathname).<span class="hljs-title function_">isDirectory</span>()) {
+        <span class="hljs-title function_">traverse</span>(pathname);
+      } <span class="hljs-keyword">else</span> {
+        res.<span class="hljs-title function_">push</span>(pathname);
+      }
+    });
+  }
+  <span class="hljs-title function_">traverse</span>(dir);
+  <span class="hljs-keyword">return</span> res;
+};
+
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">getImgUrls</span>(<span class="hljs-params">files</span>) {
+  <span class="hljs-keyword">let</span> urls = [];
+  <span class="hljs-keyword">let</span> reg = <span class="hljs-regexp">/&lt;img.+?src=(&#x27;|&quot;)?([^&#x27;&quot;]+)(&#x27;|&quot;)?(?:\s+|&gt;)/gim</span>;
+
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> index = <span class="hljs-number">0</span>; index &lt; files.<span class="hljs-property">length</span>; index++) {
+    <span class="hljs-keyword">const</span> md = files [index];
+    <span class="hljs-keyword">const</span> mdStr = fs.<span class="hljs-title function_">readFileSync</span>(md);
+    <span class="hljs-keyword">while</span> ((tem = reg.<span class="hljs-title function_">exec</span>(mdStr))) {
+      urls.<span class="hljs-title function_">push</span>(tem [<span class="hljs-number">2</span>]);
+    }
+  }
+  <span class="hljs-keyword">return</span> urls;
+}
+
+<span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">downloadImages</span>(<span class="hljs-params">ossUrls, dist</span>) {
+  <span class="hljs-keyword">await</span> <span class="hljs-title class_">Promise</span>.<span class="hljs-title function_">all</span>(
+    ossUrls.<span class="hljs-title function_">map</span>(<span class="hljs-function">(<span class="hljs-params">url</span>) =&gt;</span> {
+      <span class="hljs-keyword">if</span> (<span class="hljs-string">`<span class="hljs-subst">${url}</span>`</span>.<span class="hljs-title function_">includes</span>(ossUrlBase)) {
+        <span class="hljs-title function_">download</span>(url, dist);
+      }
+    })
+  );
+}
+
+<span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">replaceUrl</span>(<span class="hljs-params">files</span>) {
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> index = <span class="hljs-number">0</span>; index &lt; files.<span class="hljs-property">length</span>; index++) {
+    <span class="hljs-keyword">const</span> md = files [index];
+    <span class="hljs-keyword">const</span> mdStr = fs.<span class="hljs-title function_">readFileSync</span>(md).<span class="hljs-title function_">toString</span>();
+    <span class="hljs-keyword">const</span> newStr = <span class="hljs-string">`<span class="hljs-subst">${mdStr}</span>`</span>.<span class="hljs-title function_">replaceAll</span>(ossUrlBase, localUrlBase);
+    fs.<span class="hljs-title function_">writeFileSync</span>(md, newStr);
+  }
+}
+
+<span class="hljs-keyword">const</span> ossUrlBase = <span class="hljs-string">`https://public.oss-cn-beijing.aliyuncs.com/`</span>;
+<span class="hljs-keyword">const</span> localUrlBase = <span class="hljs-string">`https://files.timetickme.com/`</span>;
+
+<span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">main</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-comment">// 文章目录 </span>
+  <span class="hljs-keyword">const</span> mdDir = <span class="hljs-string">&quot;/www/sites/timetickme.com/index/2023&quot;</span>;
+  <span class="hljs-comment">// 下载图片存放目录 </span>
+  <span class="hljs-keyword">const</span> dist_img = <span class="hljs-string">&quot;/www/sites/files.timetickme.com/index&quot;</span>;
+
+  <span class="hljs-keyword">const</span> files = <span class="hljs-title function_">getAllFile</span>(mdDir);
+  <span class="hljs-keyword">const</span> urls = <span class="hljs-title function_">getImgUrls</span>(files);
+  <span class="hljs-keyword">await</span> <span class="hljs-title function_">downloadImages</span>(urls, dist_img);
+  <span class="hljs-title function_">replaceUrl</span>(files);
+}
+
+<span class="hljs-title function_">main</span>();
+</code></pre></div>
+</article>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/highlight.min.js"></script>
+<script>
+  hljs.highlightAll ();
+</script>
+
+
+        <div class="pt-10 h-30">
+          <hr />
+          <div class="pt-2 pb-3 h-18">TimeTick @ 2023</div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
